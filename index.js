@@ -19,7 +19,7 @@ for (var i = 0; i < 4; i++) {
     for (var j = 0; j < 4; j++) {
         var graphics = new PIXI.Graphics();
         graphics.beginFill(0xFFFAFA, 0.25);
-        graphics.drawRoundedRect(window.innerWidth / 6.3+j*165, window.innerHeight / 3+i*165, 160, 160, 15);
+        graphics.drawRoundedRect((window.innerWidth-165*4) / 2+j*165, (window.innerHeight-165*4) / 1.8+i*165, 160, 160, 15);
         app.stage.addChild(graphics)
     }
 
