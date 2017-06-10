@@ -15,30 +15,44 @@ var grid = []
 for (var i = 0; i < 4; i++) {
     grid[i] = [0, 0, 0, 0];
 }
-for (var i = 0; i < 4; i++) {
-    for (var j = 0; j < 4; j++) {
-        var graphics = new PIXI.Graphics();
-        graphics.beginFill(0xFFFAFA, 0.25);
-        graphics.drawRoundedRect((window.innerWidth-165*4) / 2+j*165, (window.innerHeight-165*4) / 1.8+i*165, 160, 160, 15);
-        app.stage.addChild(graphics)
-    }
-}
-
 function generateRandom() {
     return Math.floor(Math.random()*4)
 }
 
-var x=generateRandom()
-var y=generateRandom()
+var cowIndex=generateRandom()
+var rowIndex=generateRandom()
+grid[cowIndex][rowIndex]=2
 
-var graphics = new PIXI.Graphics();
-graphics.beginFill(0xFF0033, 0.25);
-graphics.drawRoundedRect((window.innerWidth - 165 * 4) / 2 + x * 165, (window.innerHeight - 165 * 4) / 1.8 + y * 165, 160, 160, 15);
-app.stage.addChild(graphics)
+for (var i = 0; i < 4; i++) {
+    for (var j = 0; j < 4; j++) {
+        drawCell(i,j)
+    }
+}
 
-var number = new PIXI.Text('2', {fontSize: 100});
-number.anchor.set(0.5)
-number.x = (window.innerWidth-165*4) / 2+x*165+165/2;
-number.y = (window.innerHeight-165*4) / 1.8+y*165+165/2;
-app.stage.addChild(number);
+function drawCell(cowIndex,rowIndex) {
+    var color = 0xFFFAFA
+    if(grid[cowIndex][rowIndex]===2){
+        color = 0xFFFF33
+    }
+    var graphics = new PIXI.Graphics();
+    graphics.beginFill(color, 0.9);
+    graphics.drawRoundedRect((window.innerWidth - 165 * 4) / 2 + cowIndex * 165, (window.innerHeight - 165 * 4) / 1.8 + rowIndex * 165, 160, 160, 15);
+    app.stage.addChild(graphics)
+
+    if(grid[cowIndex][rowIndex]!=0) {
+        var number = new PIXI.Text(grid[cowIndex][rowIndex], {fontSize: 100});
+        number.anchor.set(0.5)
+        number.x = (window.innerWidth - 165 * 4) / 2 + cowIndex * 165 + 165 / 2;
+        number.y = (window.innerHeight - 165 * 4) / 1.8 + rowIndex * 165 + 165 / 2;
+        app.stage.addChild(number);
+    }
+}
+
+document.addEventListener('keydown',function (event) {
+    if(event.key==='ArrowLeft'){
+        console.log(event)
+    }
+})
+
+
 
