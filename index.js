@@ -20,9 +20,18 @@ function generateRandom() {
     return Math.floor(Math.random()*4)
 }
 
-var rowIndex=generateRandom()
-var colunmIndex=generateRandom()
-grid[rowIndex][colunmIndex]=2
+function addRandowCell() {
+    var rowIndex = generateRandom()
+    var colunmIndex = generateRandom()
+    while (grid[rowIndex][colunmIndex]!==0) {
+        var rowIndex = generateRandom()
+        var colunmIndex = generateRandom()
+    }
+    grid[rowIndex][colunmIndex] = 2
+}
+addRandowCell();
+addRandowCell()
+flushUi()
 
 function flushUi() {
     for (var i = 0; i < 4; i++) {
@@ -39,8 +48,11 @@ function getColorByNumber(number) {
         2: 0xFFFF33,
         4: 0xFF33CC
     };
-
-    return colorValue[number];
+    var color=colorValue[number]
+    if(color===undefined) {
+        color=0xFF33CC
+    }
+    return color;
 }
 
 function drawCell(rowIndex,colunmIndex) {
@@ -61,6 +73,28 @@ function drawCell(rowIndex,colunmIndex) {
 document.addEventListener('keydown',function (event) {
     if(event.key==='ArrowRight'){
         moveCellToRight()
+        addRandowCell()
+        flushUi()
+    }
+    if(event.key==='ArrowLeft') {
+        rotateArray(2)
+        moveCellToRight()
+        rotateArray(2)
+        addRandowCell()
+        flushUi()
+    }
+    if(event.key==='ArrowUp') {
+        rotateArray(1)
+        moveCellToRight()
+        rotateArray(3)
+        addRandowCell()
+        flushUi()
+    }
+    if (event.key==='ArrowDown'){
+        rotateArray(3)
+        moveCellToRight()
+        rotateArray(1)
+        addRandowCell()
         flushUi()
     }
 })
@@ -75,10 +109,12 @@ function moveCellToRight() {
                 grid[rowIndex][theEmptyCellIndex] = grid[rowIndex][columnIndex];
                 grid[rowIndex][columnIndex] = 0;
 
-                if (grid[rowIndex][theEmptyCellIndex] === grid[rowIndex][theEmptyCellIndex + 1]) {
-                    grid[rowIndex][theEmptyCellIndex+ 1] += grid[rowIndex][theEmptyCellIndex];
-                    grid[rowIndex][theEmptyCellIndex] = 0;
-                }
+            }
+            var currentIndex = theEmptyCellIndex === -1 ? columnIndex : theEmptyCellIndex;
+
+            if (grid[rowIndex][currentIndex] === grid[rowIndex][currentIndex + 1]) {
+                grid[rowIndex][currentIndex+ 1] += grid[rowIndex][currentIndex];
+                grid[rowIndex][currentIndex] = 0;
             }
 
         }
@@ -95,3 +131,16 @@ function findTheFirstRightCell(rowIndex, columnIndex) {
     return -1;
 }
 
+function rotateArray(rotateCount = 1) {
+    for (var i = 0 ; i < rotateCount; i ++) {
+        grid = rotateArrayToRightOnce(grid);
+    }
+
+    function rotateArrayToRightOnce(array) {
+        return array.map((row, rowIndex) => {
+                return row.map((item, columnIndex) => {
+                    return array[3 - columnIndex][rowIndex];
+    })
+    })
+    }
+}
